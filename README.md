@@ -1,7 +1,3 @@
-# initialApp
+# Web Projekat - Rent a vehicle
 
-initial commit
-
-commit #2
-
-last change
+https://github.com/pusgs2018/projekat/blob/master/PUSGS%20Projekat%202018%20-%20Rent%20a%20Vehicle.pdf
