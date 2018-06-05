@@ -12,7 +12,7 @@ namespace RentApp.Models.Entities
         public int PriceListItemId { get; set; }
         public float Price { get; set; }
 
-        [ForeignKey("VehicleId")]
+        [ForeignKey("Vehicle")]
         public int VehicleId { get; set; }
         [ForeignKey("PriceList")]
         public int PriceListId { get; set; }
