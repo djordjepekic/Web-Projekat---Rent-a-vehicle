@@ -10,6 +10,7 @@ namespace RentApp.Persistance
 {
     public class RADBContext : IdentityDbContext<RAIdentityUser>
     {
+        /*
         public virtual DbSet<AppUser> AppUsers { get; set; }
         public DbSet<Service> Services { get; set; }
 
@@ -20,6 +21,15 @@ namespace RentApp.Persistance
         public static RADBContext Create()
         {
             return new RADBContext();
+        }
+        */
+        public virtual DbSet<Service> Services { get; set; }
+        public virtual DbSet<Branch> BranchOffices { get; set; }
+        public virtual DbSet<Vehicle> Vehicles { get; set; }
+
+        public RADBContext() : base("name=DemoConnection")
+        {
+            Configuration.LazyLoadingEnabled = false;
         }
     }
 }
