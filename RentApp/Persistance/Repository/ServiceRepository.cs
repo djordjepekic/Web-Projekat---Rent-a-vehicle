@@ -1,11 +1,12 @@
-using RepoDemo.Models.Entities;
+using RentApp.Models.Entities;
+using RepoDemo.Persistance.Repository;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace RepoDemo.Persistance.Repository
+namespace RentApp.Persistance.Repository
 {
     public class ServiceRepository : Repository<Service, int>, IServiceRepository
     {
@@ -18,6 +19,6 @@ namespace RepoDemo.Persistance.Repository
             return DemoContext.Services.Skip((pageIndex - 1) * pageSize).Take(pageSize);
         }
 
-        protected DemoContext DemoContext { get { return context as DemoContext; } }
+        protected RADBContext DemoContext { get { return context as RADBContext; } }
     }
 }
