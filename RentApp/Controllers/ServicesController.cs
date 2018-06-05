@@ -50,7 +50,7 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (id != service.ServiceId)
+            if (id != service.Id)
             {
                 return BadRequest();
             }
@@ -88,7 +88,7 @@ namespace RentApp.Controllers
             db.Services.Add(service);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = service.ServiceId }, service);
+            return CreatedAtRoute("DefaultApi", new { id = service.Id }, service);
         }
 
         // DELETE: api/Services/5
@@ -118,7 +118,7 @@ namespace RentApp.Controllers
 
         private bool ServiceExists(int id)
         {
-            return db.Services.Count(e => e.ServiceId == id) > 0;
+            return db.Services.Count(e => e.Id == id) > 0;
         }
     }
 }

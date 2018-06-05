@@ -10,8 +10,7 @@ namespace RentApp.Models.Entities
     [Table("PriceLists")]
     public class PriceList
     {
-		[Key]
-        public int PriceListId { get; set; }
+        public int Id { get; set; }
 
         [Column("TimeOfReservation", TypeName = "datetime2")]
         public DateTime TimeOfReservation { get; set; }

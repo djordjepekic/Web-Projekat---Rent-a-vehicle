@@ -10,8 +10,7 @@ namespace RentApp.Models.Entities
     [Table("Vehicles")]
     public class Vehicle 
     {
-        [Key]
-        public int VehicleId { get; set; }
+        public int Id { get; set; }
         public string Model { get; set; }
         public string Manufacturer { get; set; }
         public int Year { get; set; }
@@ -21,9 +20,12 @@ namespace RentApp.Models.Entities
 
         [ForeignKey("VehicleType")]
         public int VehicleTypeId { get; set; }
+        public VehicleType VehicleType { get; set; }
         [ForeignKey("Service")]
         public int ServiceId { get; set; }
+        public Service Service { get; set; }
         [ForeignKey("User")]
         public int UserId { get; set; }
+        public AppUser User { get; set; }
     }
 }

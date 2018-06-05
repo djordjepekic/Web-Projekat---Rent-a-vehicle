@@ -7,11 +7,9 @@ using System.Web;
 
 namespace RentApp.Models.Entities
 {
-    [Table("Users")]
     public class AppUser
     {     
-        [Key]
-        public int UserId { get; set; }
+        public int Id { get; set; }
         public string FullName { get; set; }
         public string Adress { get; set; }
         [Column("DateOfBirth", TypeName = "datetime2")]

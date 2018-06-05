@@ -9,7 +9,7 @@ namespace RentApp.Models.Entities
     [Table("VehicleTypes")]
     public class VehicleType
     {
-        public int VehicleTypeId { get; set; }
+        public int Id { get; set; }
         public string TypeName { get; set; }
     }
 }

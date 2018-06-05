@@ -10,12 +10,12 @@ namespace RentApp.Models.Entities
     [Table("Comments")]
     public class Comment
     {
-        [Key]
-        public int CommentId { get; set; }
+        public int Id { get; set; }
         public int Rating { get; set; }
         public string CommentText { get; set; }
 
         [ForeignKey("User")]
         public int ClientId{ get; set; }
+        public AppUser User { get; set; }
     }
 }

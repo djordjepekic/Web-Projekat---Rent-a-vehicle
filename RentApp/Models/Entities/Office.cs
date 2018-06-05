@@ -10,8 +10,7 @@ namespace RentApp.Models.Entities
     [Table("Offices")]
     public class Office
     {		    
-		[Key]
-        public int OfficeId { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Image { get; set; }
         public string Adress { get; set; }
@@ -19,6 +18,7 @@ namespace RentApp.Models.Entities
         public float Latitude { get; set; }
 
         [ForeignKey("Service")]
-        public int SerivceId { get; set; }
+        public int ServiceId { get; set; }
+        public Service Service { get; set; }
     }
 }
