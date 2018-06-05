@@ -51,6 +51,8 @@ namespace RentApp
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
             container.RegisterType<DbContext, RADBContext>(new PerRequestLifetimeManager());
+            container.RegisterType<IServiceRepository, ServiceRepository>();
+            container.RegisterType<IUnitOfWork, DemoUnitOfWork>();
             container.RegisterType<ApplicationUserManager>();
             container.RegisterType<ISecureDataFormat<AuthenticationTicket>, CustomJwtFormat>(new InjectionConstructor("http://localhost:51680"));
             container.RegisterType<IUserStore<RAIdentityUser>, UserStore<RAIdentityUser>>(
