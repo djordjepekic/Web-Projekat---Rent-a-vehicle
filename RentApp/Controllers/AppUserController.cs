@@ -56,7 +56,7 @@ namespace RentApp.Controllers
                 return Content(HttpStatusCode.Conflict, user);
             }
 
-            return Ok();
+            return Ok("Success");
         }
 
         [HttpPut]
