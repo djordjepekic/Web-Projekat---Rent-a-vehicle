@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 
 namespace RentApp.Controllers
 {
+    [RoutePrefix("api/AppUser")]
     public class AppUserController : ApiController
     {
         RADBContext db = new RADBContext();
@@ -22,6 +23,7 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
+        [Route("GetUser")]
         [ResponseType(typeof(AppUser))]
         public IHttpActionResult GetUser()
         {
