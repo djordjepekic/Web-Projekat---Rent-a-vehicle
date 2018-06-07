@@ -23,7 +23,6 @@ namespace RentApp.Controllers
         }
 
         // GET: api/Services
-
         public IQueryable<Service> GetServices()
         {
             return db.Services;

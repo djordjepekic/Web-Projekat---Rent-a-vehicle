@@ -23,19 +23,11 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
-        [Route("GetUser")]
+        [Route("GetUser/{id}")]
         [ResponseType(typeof(AppUser))]
-        public IHttpActionResult GetUser()
+        public IHttpActionResult GetUser(int id)
         {
-            var user = new AppUser {
-                Id = 1,
-                FullName = "User1 User1",
-                Adress = "Adress1",
-                CanCreateService = true,
-                DateOfBirth = DateTime.Now,
-                Image = "",
-                Verified = true
-            };
+            AppUser user = db.AppUsers.Find(id);
 
             if (user == null)
             {
@@ -46,6 +38,7 @@ namespace RentApp.Controllers
         }
 
         [HttpPost]
+        [Route("CreateUser")]
         public IHttpActionResult CreateUser(AppUser user)
         {
             if (!ModelState.IsValid)
@@ -67,6 +60,7 @@ namespace RentApp.Controllers
         }
 
         [HttpPut]
+        [Route("ChangeUser/{id}")]
         public IHttpActionResult ChangeUser(int id, AppUser user)
         {
             if (!ModelState.IsValid)
@@ -100,7 +94,8 @@ namespace RentApp.Controllers
         }
 
         [HttpDelete]
-        public IHttpActionResult Delete(int id)
+        [Route("DeleteUser/{id}")]
+        public IHttpActionResult DeleteUser(int id)
         {
             AppUser user = db.AppUsers.Where(e => e.Id.Equals(id)).FirstOrDefault();
 
