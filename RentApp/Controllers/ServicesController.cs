@@ -13,6 +13,7 @@ using RentApp.Persistance;
 
 namespace RentApp.Controllers
 {
+    [RoutePrefix("api/Services")]
     public class ServicesController : ApiController
     {
         private RADBContext db;
@@ -22,13 +23,14 @@ namespace RentApp.Controllers
             db = context as RADBContext;
         }
 
-        // GET: api/Services
+        [HttpGet]
         public IQueryable<Service> GetServices()
         {
             return db.Services;
         }
 
-        // GET: api/Services/5
+        [HttpGet]
+        [Route("GetService/{id}")]
         [ResponseType(typeof(Service))]
         public IHttpActionResult GetService(int id)
         {
@@ -41,7 +43,8 @@ namespace RentApp.Controllers
             return Ok(service);
         }
 
-        // PUT: api/Services/5
+        [HttpPut]
+        [Route("PutService/{id}")]
         [ResponseType(typeof(void))]
         public IHttpActionResult PutService(int id, Service service)
         {
@@ -76,7 +79,8 @@ namespace RentApp.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Services
+        [HttpPost]
+        [Route("PostService")]
         [ResponseType(typeof(Service))]
         public IHttpActionResult PostService(Service service)
         {
@@ -91,7 +95,8 @@ namespace RentApp.Controllers
             return CreatedAtRoute("DefaultApi", new { id = service.Id }, service);
         }
 
-        // DELETE: api/Services/5
+        [HttpDelete]
+        [Route("DeleteUser/{id}")]
         [ResponseType(typeof(Service))]
         public IHttpActionResult DeleteService(int id)
         {
