@@ -33,14 +33,14 @@ namespace RentApp.Controllers
             int total = db.Vehicles.Count();
 
             // Select the customers based on paging parameters
-            var customers = db.Vehicles
+            var vehicles = db.Vehicles
                 .OrderBy(c => c.Id)
                 .Skip(skip)
                 .Take(pageSize)
                 .ToList();
 
             // Return the list of customers
-            return Ok(new PagedResult<Vehicle>(customers, pageNo, pageSize, total));
+            return Ok(new PagedResult<Vehicle>(vehicles, pageNo, pageSize, total));
         }
 
         [HttpGet]
