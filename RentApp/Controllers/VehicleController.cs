@@ -1,4 +1,5 @@
-﻿using RentApp.Models.Entities;
+﻿using RentApp.Models;
+using RentApp.Models.Entities;
 using RentApp.Persistance;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,26 @@ namespace RentApp.Controllers
         public IQueryable<Vehicle> GetVehicles()
         {
             return db.Vehicles;
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetPaged(int pageNo = 1, int pageSize = 50)
+        {
+            // Determine the number of records to skip
+            int skip = (pageNo - 1) * pageSize;
+
+            // Get total number of records
+            int total = db.Vehicles.Count();
+
+            // Select the customers based on paging parameters
+            var customers = db.Vehicles
+                .OrderBy(c => c.Id)
+                .Skip(skip)
+                .Take(pageSize)
+                .ToList();
+
+            // Return the list of customers
+            return Ok(new PagedResult<Vehicle>(customers, pageNo, pageSize, total));
         }
 
         [HttpGet]
