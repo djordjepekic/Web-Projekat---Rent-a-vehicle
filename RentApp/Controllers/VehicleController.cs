@@ -24,7 +24,7 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
-        public IHttpActionResult GetPaged(int pageNo = 1, int pageSize = 50)
+        public IHttpActionResult GetPaged(int pageNo, int pageSize)
         {
             // Determine the number of records to skip
             int skip = (pageNo - 1) * pageSize;
