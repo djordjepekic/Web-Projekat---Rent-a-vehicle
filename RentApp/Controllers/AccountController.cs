@@ -324,7 +324,8 @@ namespace RentApp.Controllers
             appUser.CanCreateService = true;
             appUser.FullName = model.FullName;
             appUser.Verified = true;
- 
+            //check all fields
+
             var user = new RAIdentityUser() { UserName = model.Username, Email = model.Email, AppUser = appUser,  PasswordHash = RAIdentityUser.HashPassword(model.Password)};
 
             IdentityResult result = await UserManager.CreateAsync(user);
