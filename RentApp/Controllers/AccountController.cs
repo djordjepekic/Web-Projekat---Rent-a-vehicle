@@ -17,6 +17,7 @@ using RentApp.Models;
 using RentApp.Models.Entities;
 using RentApp.Providers;
 using RentApp.Results;
+using System.Globalization;
 
 namespace RentApp.Controllers
 {
@@ -317,10 +318,16 @@ namespace RentApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var appUser = new AppUser();
+            appUser.Adress = model.Email;
+            appUser.DateOfBirth = Convert.ToDateTime(model.DateOfBirth);
+            appUser.CanCreateService = true;
+            appUser.FullName = model.FullName;
+            appUser.Verified = true;
+ 
+            var user = new RAIdentityUser() { UserName = model.Username, Email = model.Email, AppUser = appUser,  PasswordHash = RAIdentityUser.HashPassword(model.Password)};
 
-            var user = new RAIdentityUser() { UserName = model.Email, Email = model.Email };
-
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+            IdentityResult result = await UserManager.CreateAsync(user);
 
             if (!result.Succeeded)
             {
