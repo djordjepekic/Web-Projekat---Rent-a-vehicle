@@ -61,7 +61,7 @@ namespace RentApp.Controllers
             return Ok(vehicle);
         }
 
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [Route("CreateVehicle")]
         public IHttpActionResult CreateVehicle(Vehicle vehicle)
@@ -71,18 +71,18 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
+            var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
 
-            //if (user == null)
-            //{
-            //    return BadRequest("404");
-            //}
+            if (user == null)
+            {
+                return BadRequest("Not logged in!");
+            }
 
             Service service = db.Services.Where(s => s.Id == vehicle.ServiceId).FirstOrDefault();
 
             if (service == null)
             {
-                return BadRequest("404");
+                return BadRequest("404: Service not found!");
             }
 
             try
