@@ -10,6 +10,9 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using RentApp.Models.Entities;
 using RentApp.Persistance;
+using System.Web;
+using Newtonsoft.Json;
+using System.Data.Entity.Validation;
 
 namespace RentApp.Controllers
 {
@@ -82,17 +85,74 @@ namespace RentApp.Controllers
         [HttpPost]
         [Route("PostService")]
         [ResponseType(typeof(Service))]
-        public IHttpActionResult PostService(Service service)
+        //[Authorize(Roles = "Manager")]
+        public IHttpActionResult PostService()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Services.Add(service);
-            db.SaveChanges();
+            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
 
-            return CreatedAtRoute("DefaultApi", new { id = service.Id }, service);
+            //if (user == null)
+            //{
+            //    return BadRequest("You're not log in.");
+            //}
+
+            Service newService = new Service();
+            var httpRequest = HttpContext.Current.Request;
+
+            try
+            {
+                newService = JsonConvert.DeserializeObject<Service>(httpRequest.Form[0]);
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            foreach (string file in httpRequest.Files)
+            {
+                Console.WriteLine(file);
+                var postedFile = httpRequest.Files[file];
+
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".png" };
+                    var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
+                    var extension = ext.ToLower();
+
+                    if (!AllowedFileExtensions.Contains(extension))
+                    {
+                        return BadRequest();
+                    }
+                    else
+                    {
+                        var filePath = HttpContext.Current.Server.MapPath("~/Content/" + postedFile.FileName);
+                        //ZALEPITI IME DATOTEKE ZA SERVICE
+                        //npr. service.img = "Content/" + postedFile.FileName
+                        postedFile.SaveAs(filePath);
+                    }
+                }
+            }
+
+            db.Services.Add(newService);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return CreatedAtRoute("DefaultApi", new { id = newService.Id }, newService);
         }
 
         [HttpDelete]

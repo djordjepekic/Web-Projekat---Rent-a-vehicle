@@ -15,6 +15,6 @@ namespace RentApp.Models.Entities
         public string Logo { get; set; }
         public string Email { get; set; }
         public string Description { get; set; }
-        public string Verified { get; set; }
+        public bool Verified { get; set; }
     }
 }

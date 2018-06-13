@@ -291,6 +291,10 @@
     <Compile Include="Migrations\201806130710162_initAdmin.Designer.cs">
       <DependentUpon>201806130710162_initAdmin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806131012310_verifiedBool.cs" />
+    <Compile Include="Migrations\201806131012310_verifiedBool.Designer.cs">
+      <DependentUpon>201806131012310_verifiedBool.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -407,6 +411,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806130710162_initAdmin.resx">
       <DependentUpon>201806130710162_initAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806131012310_verifiedBool.resx">
+      <DependentUpon>201806131012310_verifiedBool.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
