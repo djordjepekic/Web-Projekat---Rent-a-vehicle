@@ -33,6 +33,8 @@ namespace RentApp.Controllers
             int total = db.Vehicles.Count();
 
             // Select the customers based on paging parameters
+
+            //SPUSTITI NA NIVO REPOZITORIJUMA
             var vehicles = db.Vehicles
                 .OrderBy(c => c.Id)
                 .Skip(skip)
