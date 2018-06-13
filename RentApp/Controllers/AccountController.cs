@@ -321,9 +321,16 @@ namespace RentApp.Controllers
             var appUser = new AppUser();
             appUser.Adress = model.Email;
             appUser.DateOfBirth = Convert.ToDateTime(model.DateOfBirth);
-            appUser.CanCreateService = true;
+            if(model.Role == "Manager")
+            {
+                appUser.CanCreateService = true;
+            }
+            else
+            {
+                appUser.CanCreateService = false;
+            }
             appUser.FullName = model.FullName;
-            appUser.Verified = true;
+            appUser.Verified = false;
             //check all fields
 
             var user = new RAIdentityUser() { UserName = model.Username, Email = model.Email, AppUser = appUser,  PasswordHash = RAIdentityUser.HashPassword(model.Password)};
