@@ -85,7 +85,7 @@ namespace RentApp.Controllers
         [HttpPost]
         [Route("PostService")]
         [ResponseType(typeof(Service))]
-        //[Authorize(Roles = "Manager")]
+        [Authorize(Roles = "Manager")]
         public IHttpActionResult PostService()
         {
             if (!ModelState.IsValid)
