@@ -110,7 +110,45 @@ namespace RentApp.Controllers
             catch (JsonSerializationException)
             {
                 return BadRequest(ModelState);
+            }         
+
+            db.Services.Add(newService);
+
+            try
+            {
+                db.SaveChanges();
             }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+        [HttpPost]
+        [Route("PostServiceImage")]
+        [ResponseType(typeof(Service))]
+        [Authorize(Roles = "Manager")]
+        public IHttpActionResult PostServiceImage()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
+
+            //if (user == null)
+            //{
+            //    return BadRequest("You're not log in.");
+            //}
+
+            var httpRequest = HttpContext.Current.Request;           
 
             foreach (string file in httpRequest.Files)
             {
@@ -137,22 +175,7 @@ namespace RentApp.Controllers
                 }
             }
 
-            db.Services.Add(newService);
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbEntityValidationException)
-            {
-                return BadRequest(ModelState);
-            }
-            catch (DbUpdateException)
-            {
-                return BadRequest(ModelState);
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = newService.Id }, newService);
+            return Ok("Success");
         }
 
         [HttpDelete]
