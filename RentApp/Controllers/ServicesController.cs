@@ -13,6 +13,7 @@ using RentApp.Persistance;
 using System.Web;
 using Newtonsoft.Json;
 using System.Data.Entity.Validation;
+using System.Web.Http.OData;
 
 namespace RentApp.Controllers
 {
@@ -33,6 +34,7 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
+        //[EnableQuery]
         [Route("GetService/{id}")]
         [ResponseType(typeof(Service))]
         public IHttpActionResult GetService(int id)
