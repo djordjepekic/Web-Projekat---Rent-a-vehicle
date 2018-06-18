@@ -1,9 +1,11 @@
-﻿using RentApp.Models;
+﻿using Newtonsoft.Json;
+using RentApp.Models;
 using RentApp.Models.Entities;
 using RentApp.Persistance;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -65,46 +67,57 @@ namespace RentApp.Controllers
             return Ok(vehicle);
         }
 
-        [Authorize(Roles = "Manager")]
         [HttpPost]
-        [Route("CreateVehicle")]
-        public IHttpActionResult CreateVehicle(Vehicle vehicle)
+        [Route("PostVehicle")]
+        [ResponseType(typeof(Vehicle))]
+        [Authorize(Roles = "Manager")]
+        public IHttpActionResult PostVehicle()
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
+            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
 
-            if (user == null)
-            {
-                return BadRequest("Not logged in!");
-            }
+            //if (user == null)
+            //{
+            //    return BadRequest("You're not log in.");
+            //}
 
-            Service service = db.Services.Where(s => s.Id == vehicle.ServiceId).FirstOrDefault();
-
-            if (service == null)
-            {
-                return BadRequest("404: Service not found!");
-            }
+            Vehicle newVehicle = new Vehicle();
+            var httpRequest = HttpContext.Current.Request;
 
             try
             {
-                db.Vehicles.Add(vehicle);
+                newVehicle = JsonConvert.DeserializeObject<Vehicle>(httpRequest.Form[0]);
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            db.Vehicles.Add(newVehicle);
+
+            try
+            {
                 db.SaveChanges();
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
             }
             catch (DbUpdateException)
             {
-                return Content(HttpStatusCode.Conflict, vehicle);
+                return BadRequest(ModelState);
             }
 
             return Ok("Success");
         }
 
         [HttpPost]
-        [Route("postimage")]
-        public IHttpActionResult PostImage()
+        [Route("PostVehicleImage")]
+        public IHttpActionResult PostVehicleImage()
         {
             var httpRequest = HttpContext.Current.Request;
 
@@ -134,6 +147,11 @@ namespace RentApp.Controllers
             }
 
             return Ok("Success");
+        }
+
+        private bool TypeExist(int id)
+        {
+            return db.VehicleTypes.Count(e => e.Id == id) > 0;
         }
     }
 }
