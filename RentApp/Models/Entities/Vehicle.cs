@@ -24,8 +24,5 @@ namespace RentApp.Models.Entities
         [ForeignKey("Service")]
         public int ServiceId { get; set; }
         public Service Service { get; set; }
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-        public AppUser User { get; set; }
     }
 }
