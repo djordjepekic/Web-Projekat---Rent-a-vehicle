@@ -312,9 +312,9 @@
     <Compile Include="Migrations\201806171715586_deletedOfficeName.Designer.cs">
       <DependentUpon>201806171715586_deletedOfficeName.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806181430481_vehicleModelUpdate.cs" />
-    <Compile Include="Migrations\201806181430481_vehicleModelUpdate.Designer.cs">
-      <DependentUpon>201806181430481_vehicleModelUpdate.cs</DependentUpon>
+    <Compile Include="Migrations\201806181433383_vehicleModelUpdate2.cs" />
+    <Compile Include="Migrations\201806181433383_vehicleModelUpdate2.Designer.cs">
+      <DependentUpon>201806181433383_vehicleModelUpdate2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -439,8 +439,8 @@
     <EmbeddedResource Include="Migrations\201806171715586_deletedOfficeName.resx">
       <DependentUpon>201806171715586_deletedOfficeName.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806181430481_vehicleModelUpdate.resx">
-      <DependentUpon>201806181430481_vehicleModelUpdate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806181433383_vehicleModelUpdate2.resx">
+      <DependentUpon>201806181433383_vehicleModelUpdate2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

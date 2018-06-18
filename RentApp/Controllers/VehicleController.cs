@@ -93,7 +93,6 @@ namespace RentApp.Controllers
                 newVehicle = JsonConvert.DeserializeObject<Vehicle>(httpRequest.Form[0]);
                 newVehicle.Service = db.Services.Find(newVehicle.ServiceId);
                 newVehicle.VehicleType = db.VehicleTypes.Find(newVehicle.VehicleTypeId);
-                newVehicle.User = null;
             }
             catch (JsonSerializationException)
             {

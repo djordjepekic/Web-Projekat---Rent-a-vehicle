@@ -18,7 +18,7 @@ namespace RentApp.Models.Entities
         public Vehicle Vehicle { get; set; }
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public Vehicle User { get; set; }
+        public AppUser User { get; set; }
         [ForeignKey("PriceList")]
         public int PriceListId { get; set; }
         public PriceList PriceList{ get; set; }
