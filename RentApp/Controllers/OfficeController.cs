@@ -63,6 +63,7 @@ namespace RentApp.Controllers
             try
             {
                 newOffice = JsonConvert.DeserializeObject<Office>(httpRequest.Form[0]);
+                newOffice.Service = db.Services.Find(newOffice.ServiceId);
             }
             catch (JsonSerializationException)
             {
