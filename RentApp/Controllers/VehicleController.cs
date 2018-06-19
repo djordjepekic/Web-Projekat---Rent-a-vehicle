@@ -23,12 +23,14 @@ namespace RentApp.Controllers
         RADBContext db = new RADBContext();
 
         [HttpGet]
+        [Route("GetVehicles")]
         public IQueryable<Vehicle> GetVehicles()
         {
             return db.Vehicles;
         }
 
         [HttpGet]
+        [Route("GetAvailableVehicles")]
         public IQueryable<Vehicle> GetAvailableVehicles()
         {
             return db.Vehicles.Where(x => x.Available == true);

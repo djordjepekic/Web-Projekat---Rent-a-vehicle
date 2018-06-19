@@ -336,14 +336,8 @@ namespace RentApp.Controllers
             var user = new RAIdentityUser() { Id = model.Email, UserName = model.Username, Email = model.Email, AppUser = appUser,  PasswordHash = RAIdentityUser.HashPassword(model.Password)};
 
             IdentityResult result = await UserManager.CreateAsync(user);
-            try
-            {
-                UserManager.AddToRole(user.Id, model.Role.ToString());
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            UserManager.AddToRole(user.Id, model.Role.ToString());
+
 
             if (!result.Succeeded)
             {
