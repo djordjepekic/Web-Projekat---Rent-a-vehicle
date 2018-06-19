@@ -1,11 +1,15 @@
-﻿using RentApp.Models.Entities;
+﻿using Newtonsoft.Json;
+using RentApp.Models.Entities;
 using RentApp.Persistance;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 
@@ -20,6 +24,70 @@ namespace RentApp.Controllers
         public IQueryable<AppUser> GetAllUsers()
         {
             return db.AppUsers;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [Route("GetAllManagers")]
+        public List<AppUser> GetAllManagers()
+        {
+            List<AppUser> appUsers = new List<AppUser>();
+            var role = db.Roles.Where(r => r.Name.Equals("Manager")).FirstOrDefault();
+
+            foreach (var user in role.Users)
+            {
+                if (user.RoleId.Equals(role.Id))
+                {
+                    var netUser = db.Users.Where(x => x.Id == user.UserId).FirstOrDefault();
+                    AppUser manager = db.AppUsers.Where(x => x.Id == netUser.AppUserId).FirstOrDefault();
+                    appUsers.Add(manager);
+                }
+            }
+
+            return appUsers;
+        }
+
+        [HttpPost]
+        [Route("ChangeManagerStatus")]
+        [ResponseType(typeof(void))]
+        [Authorize(Roles = "Admin")]
+        public IHttpActionResult ChangeManagerStatus()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            AppUser changeUser = null;
+            int id;
+            var httpRequest = HttpContext.Current.Request;
+
+            try
+            {
+                id = JsonConvert.DeserializeObject<Int32>(httpRequest.Form[0]);
+                changeUser = db.AppUsers.Find(id);
+                changeUser.CanCreateService = (changeUser.CanCreateService == true) ? false : true;
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                db.Entry(changeUser).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Success");
         }
 
         [HttpGet]

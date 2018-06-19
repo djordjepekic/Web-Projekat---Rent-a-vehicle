@@ -95,12 +95,12 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
+            var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
 
-            //if (user == null)
-            //{
-            //    return BadRequest("You're not log in.");
-            //}
+            if (!db.AppUsers.Where(x => x.Id.Equals(user.AppUserId)).FirstOrDefault().CanCreateService)
+            {
+                return BadRequest("You are banned. This operation isn't permitted.");
+            }
 
             Service newService = new Service();
             var httpRequest = HttpContext.Current.Request;

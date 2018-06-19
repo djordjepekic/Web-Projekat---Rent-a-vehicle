@@ -4,6 +4,7 @@ using RentApp.Models.Entities;
 using RentApp.Persistance;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -86,13 +87,6 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
-
-            //if (user == null)
-            //{
-            //    return BadRequest("You're not log in.");
-            //}
-
             Vehicle newVehicle = new Vehicle();
             var httpRequest = HttpContext.Current.Request;
 
@@ -159,9 +153,52 @@ namespace RentApp.Controllers
             return Ok("Success");
         }
 
-        private bool TypeExist(int id)
+        [HttpPost]
+        [Route("ChangeVehicle")]
+        [ResponseType(typeof(void))]
+        [Authorize(Roles = "Manager")]
+        public IHttpActionResult ChangeVehicle()
         {
-            return db.VehicleTypes.Count(e => e.Id == id) > 0;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Vehicle changeVehicle = null; 
+            int id;
+            var httpRequest = HttpContext.Current.Request;
+
+            try
+            {
+                id = JsonConvert.DeserializeObject<Int32>(httpRequest.Form[0]);
+                changeVehicle = db.Vehicles.Find(id);
+                changeVehicle.Available = (changeVehicle.Available == true) ? false : true;
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                db.Entry(changeVehicle).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Success");
+        }
+
+        private bool VehicleExist(int id)
+        {
+            return db.Vehicles.Count(e => e.Id == id) > 0;
         }
     }
 }
