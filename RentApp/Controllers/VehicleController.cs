@@ -57,7 +57,6 @@ namespace RentApp.Controllers
         [ResponseType(typeof(Vehicle))]
         public IHttpActionResult GetVehicle(int id)
         {
-            //Vehicle vehicle = db.Vehicles.Include("Service").FirstOrDefault(v => v.Id == id);
             Vehicle vehicle = db.Vehicles.Find(id);
 
             if (vehicle == null)
@@ -130,7 +129,7 @@ namespace RentApp.Controllers
 
                     if (!AllowedFileExtensions.Contains(extension))
                     {
-                        return BadRequest();
+                        return BadRequest("File extension not allowed!.");
                     }
                     else
                     {

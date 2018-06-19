@@ -92,13 +92,6 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
-
-            //if (user == null)
-            //{
-            //    return BadRequest("You're not log in.");
-            //}
-
             var httpRequest = HttpContext.Current.Request;
 
             foreach (string file in httpRequest.Files)
@@ -114,7 +107,7 @@ namespace RentApp.Controllers
 
                     if (!AllowedFileExtensions.Contains(extension))
                     {
-                        return BadRequest();
+                        return BadRequest("File extension not allowed!.");
                     }
                     else
                     {
