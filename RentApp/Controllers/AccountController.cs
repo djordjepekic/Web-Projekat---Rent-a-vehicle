@@ -333,10 +333,17 @@ namespace RentApp.Controllers
             appUser.Verified = false;
             //check all fields
 
-            var user = new RAIdentityUser() { UserName = model.Username, Email = model.Email, AppUser = appUser,  PasswordHash = RAIdentityUser.HashPassword(model.Password)};
+            var user = new RAIdentityUser() { Id = model.Email, UserName = model.Username, Email = model.Email, AppUser = appUser,  PasswordHash = RAIdentityUser.HashPassword(model.Password)};
 
             IdentityResult result = await UserManager.CreateAsync(user);
-            UserManager.AddToRole(user.Id, model.Role.ToString());
+            try
+            {
+                UserManager.AddToRole(user.Id, model.Role.ToString());
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             if (!result.Succeeded)
             {
