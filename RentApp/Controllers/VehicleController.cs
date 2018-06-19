@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.OData;
 
 namespace RentApp.Controllers
 {
@@ -24,6 +25,12 @@ namespace RentApp.Controllers
         public IQueryable<Vehicle> GetVehicles()
         {
             return db.Vehicles;
+        }
+
+        [HttpGet]
+        public IQueryable<Vehicle> GetAvailableVehicles()
+        {
+            return db.Vehicles.Where(x => x.Available == true);
         }
 
         /// <summary>
@@ -41,7 +48,7 @@ namespace RentApp.Controllers
             // Select the customers based on paging parameters
 
             //SPUSTITI NA NIVO REPOZITORIJUMA
-            var vehicles = db.Vehicles
+            var vehicles = db.Vehicles.Where(x => x.Available == true)
                 .OrderBy(c => c.Id)
                 .Skip(skip)
                 .Take(pageSize)
@@ -51,6 +58,7 @@ namespace RentApp.Controllers
             return Ok(new PagedResult<Vehicle>(vehicles, pageNo, pageSize, total));
         }
 
+        [EnableQuery]
         [HttpGet]
         [Route("GetVehicle/{id}")]
         [ResponseType(typeof(Vehicle))]
