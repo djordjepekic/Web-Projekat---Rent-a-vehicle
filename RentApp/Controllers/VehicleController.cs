@@ -79,13 +79,6 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            //var user = db.Users.FirstOrDefault(u => u.UserName.Equals(User.Identity.Name));
-
-            //if (user == null)
-            //{
-            //    return BadRequest("You're not log in.");
-            //}
-
             Vehicle newVehicle = new Vehicle();
             var httpRequest = HttpContext.Current.Request;
 
