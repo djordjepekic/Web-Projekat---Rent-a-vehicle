@@ -225,5 +225,32 @@ namespace RentApp.Controllers
 
             return Ok("Success");
         }
+
+        [HttpGet]
+        [Route("GetReservedVehicles/{username}")]
+        [ResponseType(typeof(PriceListItem))]
+        public IHttpActionResult GetReservedVehicles(string username)
+        {
+            var appnetuser = db.Users.Where(x => x.UserName == username);
+            var userId = db.AppUsers.Where(x => x.Id == appnetuser.FirstOrDefault().AppUserId);
+
+            var userPriceLists = db.PriceLists.Where(x => x.UserId == userId.FirstOrDefault().Id);
+
+            var priceListItems = (from x in db.PriceLists
+                                  join pr in db.PriceListItems on x.Id equals pr.PriceListId
+                                  select pr);
+
+            var vehicles = (from x in priceListItems
+                            join pr in db.Vehicles on x.VehicleId equals pr.Id
+                            select pr);
+
+
+            if (vehicles == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(vehicles);
+        }
     }
 }
