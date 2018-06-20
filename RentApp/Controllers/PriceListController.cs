@@ -190,25 +190,27 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.PriceLists.Add(priceList);
-
-            PriceList changePriceList = new PriceList();
-            changePriceList = db.PriceLists.Find(priceList.Id);
-            using (var context = new RADBContext())
-            {
-                PriceListItem pi = context.PriceListItems
-                                .Where(b => b.VehicleId == reservationModel.VehicleId)
-                                .FirstOrDefault();
-
-                pi.PriceList = changePriceList;
-                pi.PriceListId = changePriceList.Id;
-                context.Entry(pi).State = EntityState.Modified;
-                context.Dispose();
-            }
+            db.PriceLists.Add(priceList);          
 
             try
             {
                 db.SaveChanges();
+                db.Dispose();
+
+                PriceList changePriceList = new PriceList();
+                using (var context = new RADBContext())
+                {
+                    changePriceList = context.PriceLists.Find(priceList.Id);
+                    PriceListItem pi = context.PriceListItems
+                                    .Where(b => b.VehicleId == reservationModel.VehicleId)
+                                    .FirstOrDefault();
+
+                    pi.PriceList = changePriceList;
+                    pi.PriceListId = changePriceList.Id;
+                    context.Entry(pi).State = EntityState.Modified;
+                    context.SaveChanges();
+                    context.Dispose();
+                }
             }
             catch (DbEntityValidationException)
             {
@@ -217,9 +219,7 @@ namespace RentApp.Controllers
             catch (DbUpdateException)
             {
                 return BadRequest(ModelState);
-            }
-
-            
+            }       
 
             return Ok("Success");
         }
