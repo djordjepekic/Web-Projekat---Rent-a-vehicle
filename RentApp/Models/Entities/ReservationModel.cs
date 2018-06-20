@@ -11,5 +11,7 @@ namespace RentApp.Models.Entities
         public int VehicleId { get; set; }
         public DateTime TimeOfReservation { get; set; }
         public DateTime TimeToReturn { get; set; }
+        public int TakeOfficeId { get; set; }
+        public int ReturnOfficeId { get; set; }
     }
 }

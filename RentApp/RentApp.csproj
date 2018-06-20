@@ -317,9 +317,9 @@
     <Compile Include="Migrations\201806181433383_vehicleModelUpdate2.Designer.cs">
       <DependentUpon>201806181433383_vehicleModelUpdate2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201806201336403_pricelistupdate.cs" />
-    <Compile Include="Migrations\201806201336403_pricelistupdate.Designer.cs">
-      <DependentUpon>201806201336403_pricelistupdate.cs</DependentUpon>
+    <Compile Include="Migrations\201806202051419_TakeAndReturnOffice.cs" />
+    <Compile Include="Migrations\201806202051419_TakeAndReturnOffice.Designer.cs">
+      <DependentUpon>201806202051419_TakeAndReturnOffice.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -392,7 +392,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -448,8 +450,8 @@
     <EmbeddedResource Include="Migrations\201806181433383_vehicleModelUpdate2.resx">
       <DependentUpon>201806181433383_vehicleModelUpdate2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201806201336403_pricelistupdate.resx">
-      <DependentUpon>201806201336403_pricelistupdate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806202051419_TakeAndReturnOffice.resx">
+      <DependentUpon>201806202051419_TakeAndReturnOffice.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

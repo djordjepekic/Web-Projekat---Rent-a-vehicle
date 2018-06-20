@@ -154,6 +154,7 @@ namespace RentApp.Controllers
                     user = context.Users
                                     .Where(b => b.UserName == reservationModel.UserName)
                                     .FirstOrDefault();
+                    context.Dispose();
                 }
 
                 foreach(AppUser u in db.AppUsers)
@@ -167,8 +168,10 @@ namespace RentApp.Controllers
 
                 priceList.TimeOfReservation = reservationModel.TimeOfReservation;
                 priceList.TimeToReturn = reservationModel.TimeToReturn;
-
-                
+                priceList.TakeOfficeId = reservationModel.TakeOfficeId;
+                priceList.ReturnOfficeId = reservationModel.ReturnOfficeId;
+                priceList.TakeOffice = db.Offices.Find(reservationModel.TakeOfficeId);
+                priceList.ReturnOffice = db.Offices.Find(reservationModel.ReturnOfficeId);
 
                 using (var context = new RADBContext())
                 {
@@ -179,6 +182,7 @@ namespace RentApp.Controllers
                     v.Available = false;
                     context.Entry(v).State = EntityState.Modified;
                     context.SaveChanges();
+                    context.Dispose();
                 }
             }
             catch (JsonSerializationException)
@@ -188,23 +192,23 @@ namespace RentApp.Controllers
 
             db.PriceLists.Add(priceList);
 
+            PriceList changePriceList = new PriceList();
+            changePriceList = db.PriceLists.Find(priceList.Id);
+            using (var context = new RADBContext())
+            {
+                PriceListItem pi = context.PriceListItems
+                                .Where(b => b.VehicleId == reservationModel.VehicleId)
+                                .FirstOrDefault();
+
+                pi.PriceList = changePriceList;
+                pi.PriceListId = changePriceList.Id;
+                context.Entry(pi).State = EntityState.Modified;
+                context.Dispose();
+            }
+
             try
             {
                 db.SaveChanges();
-
-                PriceList changePriceList = new PriceList();
-                changePriceList = db.PriceLists.Find(priceList.Id);
-                using (var context = new RADBContext())
-                {
-                    PriceListItem pi = context.PriceListItems
-                                    .Where(b => b.VehicleId == reservationModel.VehicleId)
-                                    .FirstOrDefault();
-
-                    pi.PriceList = changePriceList;
-                    pi.PriceListId = changePriceList.Id;
-                    context.Entry(pi).State = EntityState.Modified;
-                    context.SaveChanges();
-                }
             }
             catch (DbEntityValidationException)
             {
@@ -214,6 +218,8 @@ namespace RentApp.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            
 
             return Ok("Success");
         }

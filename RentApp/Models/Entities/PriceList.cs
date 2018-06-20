@@ -19,5 +19,15 @@ namespace RentApp.Models.Entities
         public DateTime TimeOfReservation { get; set; }
         [Column("TimeToReturn", TypeName = "datetime2")]
         public DateTime TimeToReturn { get; set; }
+
+        //[InverseProperty("PriceListTakeOffice")]
+        [ForeignKey("TakeOffice")]
+        public int? TakeOfficeId { get; set; }
+        public virtual Office TakeOffice { get; set; }
+        //[InverseProperty("PriceListReturnOffice")]
+        [ForeignKey("ReturnOffice")]
+        public int? ReturnOfficeId { get; set; }
+        public virtual Office ReturnOffice { get; set; }
+
     }
 }
