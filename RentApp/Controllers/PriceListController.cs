@@ -190,17 +190,18 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            db.PriceLists.Add(priceList);          
+            db.PriceLists.Add(priceList);
+
+            
 
             try
             {
                 db.SaveChanges();
-                db.Dispose();
 
                 PriceList changePriceList = new PriceList();
+                changePriceList = db.PriceLists.Find(priceList.Id);
                 using (var context = new RADBContext())
                 {
-                    changePriceList = context.PriceLists.Find(priceList.Id);
                     PriceListItem pi = context.PriceListItems
                                     .Where(b => b.VehicleId == reservationModel.VehicleId)
                                     .FirstOrDefault();
@@ -208,7 +209,6 @@ namespace RentApp.Controllers
                     pi.PriceList = changePriceList;
                     pi.PriceListId = changePriceList.Id;
                     context.Entry(pi).State = EntityState.Modified;
-                    context.SaveChanges();
                     context.Dispose();
                 }
             }
@@ -219,36 +219,11 @@ namespace RentApp.Controllers
             catch (DbUpdateException)
             {
                 return BadRequest(ModelState);
-            }       
-
-            return Ok("Success");
-        }
-
-        [HttpGet]
-        [Route("GetReservedVehicles/{username}")]
-        [ResponseType(typeof(PriceListItem))]
-        public IHttpActionResult GetReservedVehicles(string username)
-        {
-            var appnetuser = db.Users.Where(x => x.UserName == username);
-            var userId = db.AppUsers.Where(x => x.Id == appnetuser.FirstOrDefault().AppUserId);
-
-            var userPriceLists = db.PriceLists.Where(x => x.UserId == userId.FirstOrDefault().Id);
-
-            var priceListItems = (from x in db.PriceLists
-                                  join pr in db.PriceListItems on x.Id equals pr.PriceListId
-                                  select pr);
-
-            var vehicles = (from x in priceListItems
-                            join pr in db.Vehicles on x.VehicleId equals pr.Id
-                            select pr);
-            
-
-            if (vehicles == null)
-            {
-                return NotFound();
             }
 
-            return Ok(vehicles);
+            
+
+            return Ok("Success");
         }
     }
 }
