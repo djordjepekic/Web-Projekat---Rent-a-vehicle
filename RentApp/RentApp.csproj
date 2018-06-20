@@ -330,6 +330,7 @@
     <Compile Include="Models\Entities\PriceListItem.cs" />
     <Compile Include="Models\Entities\RAIdentityUser.cs" />
     <Compile Include="Models\Entities\AppUser.cs" />
+    <Compile Include="Models\Entities\ReservationModel.cs" />
     <Compile Include="Models\Entities\Services.cs" />
     <Compile Include="Models\Entities\Vehicle.cs" />
     <Compile Include="Models\Entities\VehicleType.cs" />

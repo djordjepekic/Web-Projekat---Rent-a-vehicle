@@ -129,5 +129,93 @@ namespace RentApp.Controllers
             
             return Ok("Success");
         }
+
+        [HttpPost]
+        [Route("Reservation")]
+        [ResponseType(typeof(void))]
+        //[Authorize(Roles = "AppUser")]
+        public IHttpActionResult Reservation()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            ReservationModel reservationModel = new ReservationModel();
+            PriceList priceList = new PriceList();
+            var httpRequest = HttpContext.Current.Request;
+            RAIdentityUser user = null;
+            try
+            {
+                reservationModel = JsonConvert.DeserializeObject<ReservationModel>(httpRequest.Form[0]);
+
+                using (var context = new RADBContext())
+                {                 
+                    user = context.Users
+                                    .Where(b => b.UserName == reservationModel.UserName)
+                                    .FirstOrDefault();
+                }
+
+                foreach(AppUser u in db.AppUsers)
+                {
+                    if(u.Id == user.AppUserId)
+                    {
+                        priceList.UserId = u.Id;
+                        priceList.User = u;
+                    }
+                }
+
+                priceList.TimeOfReservation = reservationModel.TimeOfReservation;
+                priceList.TimeToReturn = reservationModel.TimeToReturn;
+
+                
+
+                using (var context = new RADBContext())
+                {
+                    Vehicle v = context.Vehicles
+                                    .Where(b => b.Id == reservationModel.VehicleId)
+                                    .FirstOrDefault();
+
+                    v.Available = false;
+                    context.Entry(v).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            db.PriceLists.Add(priceList);
+
+            try
+            {
+                db.SaveChanges();
+
+                PriceList changePriceList = new PriceList();
+                changePriceList = db.PriceLists.Find(priceList.Id);
+                using (var context = new RADBContext())
+                {
+                    PriceListItem pi = context.PriceListItems
+                                    .Where(b => b.VehicleId == reservationModel.VehicleId)
+                                    .FirstOrDefault();
+
+                    pi.PriceList = changePriceList;
+                    pi.PriceListId = changePriceList.Id;
+                    context.Entry(pi).State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Success");
+        }
     }
 }
