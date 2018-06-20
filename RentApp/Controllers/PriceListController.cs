@@ -25,6 +25,22 @@ namespace RentApp.Controllers
             return db.PriceListItems;
         }
 
+        [HttpGet]
+        [Route("GetPriceList/{id}")]
+        [ResponseType(typeof(PriceListItem))]
+        public IHttpActionResult GetPriceListItem(int id)
+        {
+            var pri = db.PriceListItems.Where(x => x.VehicleId == id);
+
+            if (pri == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(pri);
+        }
+
+
         [HttpPost]
         [Route("ChangeVehiclePrice")]
         [ResponseType(typeof(void))]

@@ -34,7 +34,6 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
-        //[EnableQuery]
         [Route("GetService/{id}")]
         [ResponseType(typeof(Service))]
         public IHttpActionResult GetService(int id)
