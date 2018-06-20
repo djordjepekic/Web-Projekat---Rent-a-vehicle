@@ -12,6 +12,9 @@ namespace RentApp.Models.Entities
     {
         public int Id { get; set; }
 
+        [ForeignKey("User")]
+        public int UserId { get; set; }
+        public AppUser User { get; set; }
         [Column("TimeOfReservation", TypeName = "datetime2")]
         public DateTime TimeOfReservation { get; set; }
         [Column("TimeToReturn", TypeName = "datetime2")]

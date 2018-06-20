@@ -316,6 +316,10 @@
     <Compile Include="Migrations\201806181433383_vehicleModelUpdate2.Designer.cs">
       <DependentUpon>201806181433383_vehicleModelUpdate2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806201336403_pricelistupdate.cs" />
+    <Compile Include="Migrations\201806201336403_pricelistupdate.Designer.cs">
+      <DependentUpon>201806201336403_pricelistupdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -441,6 +445,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806181433383_vehicleModelUpdate2.resx">
       <DependentUpon>201806181433383_vehicleModelUpdate2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806201336403_pricelistupdate.resx">
+      <DependentUpon>201806201336403_pricelistupdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

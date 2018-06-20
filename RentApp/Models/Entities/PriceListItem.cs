@@ -13,14 +13,11 @@ namespace RentApp.Models.Entities
         public int Id { get; set; }
         public float Price { get; set; }
 
+        [ForeignKey("PriceList")]
+        public int? PriceListId { get; set; }
+        public virtual PriceList PriceList{ get; set; }
         [ForeignKey("Vehicle")]
         public int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; }
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-        public AppUser User { get; set; }
-        [ForeignKey("PriceList")]
-        public int PriceListId { get; set; }
-        public PriceList PriceList{ get; set; }
     }
 }
