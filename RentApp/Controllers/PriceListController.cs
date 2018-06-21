@@ -260,7 +260,7 @@ namespace RentApp.Controllers
 
             var userPriceLists = db.PriceLists.Where(x => x.UserId == userId.FirstOrDefault().Id);
 
-            var priceListItems = (from x in db.PriceLists
+            var priceListItems = (from x in userPriceLists
                                   join pr in db.PriceListItems on x.Id equals pr.PriceListId
                                   select pr);
 
