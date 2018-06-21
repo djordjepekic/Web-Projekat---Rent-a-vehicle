@@ -250,10 +250,6 @@ namespace RentApp.Controllers
             return Ok("Success");
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e285ede007d2a045924d7c653e9a28256ce44f5d
         [HttpGet]
         [Route("GetReservedVehicles/{username}")]
         [ResponseType(typeof(PriceListItem))]
