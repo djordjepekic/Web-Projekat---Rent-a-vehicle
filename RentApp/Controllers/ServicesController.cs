@@ -218,10 +218,10 @@ namespace RentApp.Controllers
         }
 
         [HttpPost]
-        [Route("VerfiyOrUnVerfiy")]
+        [Route("VerifyOrUnVerify")]
         [ResponseType(typeof(void))]
         [Authorize(Roles = "Admin")]
-        public IHttpActionResult VerfiyOrUnVerfiy()
+        public IHttpActionResult VerifyOrUnVerify()
         {
             if (!ModelState.IsValid)
             {
