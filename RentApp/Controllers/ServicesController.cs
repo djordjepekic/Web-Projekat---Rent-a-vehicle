@@ -216,5 +216,49 @@ namespace RentApp.Controllers
         {
             return db.Services.Count(e => e.Id == id) > 0;
         }
+
+        [HttpPost]
+        [Route("VerfiyOrUnVerfiy")]
+        [ResponseType(typeof(void))]
+        [Authorize(Roles = "Admin")]
+        public IHttpActionResult VerfiyOrUnVerfiy()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Service changeService = null;
+            int id;
+            var httpRequest = HttpContext.Current.Request;
+
+            try
+            {
+                id = JsonConvert.DeserializeObject<Int32>(httpRequest.Form[0]);
+                changeService = db.Services.Find(id);
+                changeService.Verified = (changeService.Verified == true) ? false : true;
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                db.Entry(changeService).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return Ok("Success");
+        }
     }
 }
+
