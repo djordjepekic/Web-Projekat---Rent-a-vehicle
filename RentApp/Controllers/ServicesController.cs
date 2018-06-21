@@ -34,6 +34,13 @@ namespace RentApp.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllVerifiedServices")]
+        public IQueryable<Service> GetAllVerifiedServices()
+        {
+            return db.Services.Where(x => x.Verified == true);
+        }
+
+        [HttpGet]
         [Route("GetService/{id}")]
         [ResponseType(typeof(Service))]
         public IHttpActionResult GetService(int id)
