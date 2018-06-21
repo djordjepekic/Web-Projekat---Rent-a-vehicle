@@ -32,7 +32,9 @@ namespace RentApp.Controllers
         public List<AppUser> GetAllManagers()
         {
             List<AppUser> appUsers = new List<AppUser>();
-            var role = db.Roles.Where(r => r.Name.Equals("Manager")).FirstOrDefault();
+
+            //include zbog lazy loading-a
+            var role = db.Roles.Include(x => x.Users).Where(r => r.Name.Equals("Manager")).FirstOrDefault();
 
             foreach (var user in role.Users)
             {
