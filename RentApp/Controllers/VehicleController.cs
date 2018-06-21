@@ -46,7 +46,7 @@ namespace RentApp.Controllers
             int skip = (pageNo - 1) * pageSize;
 
             // Get total number of records
-            int total = db.Vehicles.Count();
+            int total = db.Vehicles.Where(x => x.Available==true).Count();
 
             // Select the customers based on paging parameters
 
