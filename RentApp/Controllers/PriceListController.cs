@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 
 namespace RentApp.Controllers
@@ -20,6 +21,7 @@ namespace RentApp.Controllers
     {
         RADBContext db = new RADBContext();
 
+        [HttpGet]
         public IQueryable<PriceListItem> GetAllPriceListItems()
         {
             return db.PriceListItems;
@@ -74,7 +76,7 @@ namespace RentApp.Controllers
                 }
             }
 
-            if(changePriceListItem != null)
+            if (changePriceListItem != null)
             {
                 try
                 {
@@ -126,13 +128,13 @@ namespace RentApp.Controllers
                 }
 
             }
-            
+
             return Ok("Success");
         }
 
         [HttpPost]
         [Route("Reservation")]
-        [ResponseType(typeof(void))]
+        [ResponseType(typeof(int))]
         //[Authorize(Roles = "AppUser")]
         public IHttpActionResult Reservation()
         {
@@ -149,17 +151,13 @@ namespace RentApp.Controllers
             {
                 reservationModel = JsonConvert.DeserializeObject<ReservationModel>(httpRequest.Form[0]);
 
-                using (var context = new RADBContext())
-                {                 
-                    user = context.Users
-                                    .Where(b => b.UserName == reservationModel.UserName)
-                                    .FirstOrDefault();
-                    context.Dispose();
-                }
+                user = db.Users
+                            .Where(b => b.UserName == reservationModel.UserName)
+                            .FirstOrDefault();
 
-                foreach(AppUser u in db.AppUsers)
+                foreach (AppUser u in db.AppUsers)
                 {
-                    if(u.Id == user.AppUserId)
+                    if (u.Id == user.AppUserId)
                     {
                         priceList.UserId = u.Id;
                         priceList.User = u;
@@ -173,17 +171,6 @@ namespace RentApp.Controllers
                 priceList.TakeOffice = db.Offices.Find(reservationModel.TakeOfficeId);
                 priceList.ReturnOffice = db.Offices.Find(reservationModel.ReturnOfficeId);
 
-                using (var context = new RADBContext())
-                {
-                    Vehicle v = context.Vehicles
-                                    .Where(b => b.Id == reservationModel.VehicleId)
-                                    .FirstOrDefault();
-
-                    v.Available = false;
-                    context.Entry(v).State = EntityState.Modified;
-                    context.SaveChanges();
-                    context.Dispose();
-                }
             }
             catch (JsonSerializationException)
             {
@@ -192,25 +179,9 @@ namespace RentApp.Controllers
 
             db.PriceLists.Add(priceList);
 
-            
-
             try
             {
                 db.SaveChanges();
-
-                PriceList changePriceList = new PriceList();
-                changePriceList = db.PriceLists.Find(priceList.Id);
-                using (var context = new RADBContext())
-                {
-                    PriceListItem pi = context.PriceListItems
-                                    .Where(b => b.VehicleId == reservationModel.VehicleId)
-                                    .FirstOrDefault();
-
-                    pi.PriceList = changePriceList;
-                    pi.PriceListId = changePriceList.Id;
-                    context.Entry(pi).State = EntityState.Modified;
-                    context.Dispose();
-                }
             }
             catch (DbEntityValidationException)
             {
@@ -221,9 +192,90 @@ namespace RentApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            
+
+            return Ok(priceList.Id);
+        }
+
+        [HttpPost]
+        [Route("PriceListItemId")]
+        [ResponseType(typeof(PriceListItemReservationModel))]
+        //[Authorize(Roles = "AppUser")]
+        public IHttpActionResult PriceListItemId()
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var httpRequest = HttpContext.Current.Request;
+            var newPriceListItemReservationModel = new PriceListItemReservationModel();
+
+            try
+            {
+                newPriceListItemReservationModel = JsonConvert.DeserializeObject<PriceListItemReservationModel>(httpRequest.Form[0]);
+            }
+            catch (JsonSerializationException)
+            {
+                return BadRequest(ModelState);
+            }
+
+            PriceListItem pi = db.PriceListItems
+                            .Where(b => b.VehicleId == newPriceListItemReservationModel.VehicleId)
+                            .FirstOrDefault();
+
+            pi.PriceListId = newPriceListItemReservationModel.PriceListId;
+            pi.PriceList = db.PriceLists.Find(newPriceListItemReservationModel.PriceListId);
+            db.Entry(pi).State = EntityState.Modified;
+
+            Vehicle v = db.Vehicles
+            .Where(b => b.Id == newPriceListItemReservationModel.VehicleId)
+            .FirstOrDefault();
+
+            v.Available = false;
+            db.Entry(v).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbEntityValidationException)
+            {
+                return BadRequest(ModelState);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(ModelState);
+            }
 
             return Ok("Success");
+        }
+
+
+        [HttpGet]
+        [Route("GetReservedVehicles/{username}")]
+        [ResponseType(typeof(PriceListItem))]
+        public IHttpActionResult GetReservedVehicles(string username)
+        {
+            var appnetuser = db.Users.Where(x => x.UserName == username);
+            var userId = db.AppUsers.Where(x => x.Id == appnetuser.FirstOrDefault().AppUserId);
+
+            var userPriceLists = db.PriceLists.Where(x => x.UserId == userId.FirstOrDefault().Id);
+
+            var priceListItems = (from x in db.PriceLists
+                                  join pr in db.PriceListItems on x.Id equals pr.PriceListId
+                                  select pr);
+
+            var vehicles = (from x in priceListItems
+                            join pr in db.Vehicles on x.VehicleId equals pr.Id
+                            select pr);
+
+
+            if (vehicles == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(vehicles);
         }
     }
 }

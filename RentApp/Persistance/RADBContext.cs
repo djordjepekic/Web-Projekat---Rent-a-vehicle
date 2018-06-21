@@ -20,7 +20,9 @@ namespace RentApp.Persistance
         public virtual DbSet<PriceListItem> PriceListItems { get; set; }
 
         public RADBContext() : base("name=RADB")
-        {           
+        {
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
 
         public static RADBContext Create()
